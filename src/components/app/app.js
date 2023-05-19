@@ -17,7 +17,7 @@ class App extends Component {
                 {name: "Carl W.", salary: 4000, increase: false, like: false, id: 3}
             ],
             term: '',
-            filter: 'salary'
+            filter: 'all'
         }
         this.maxID = 4;
     }
@@ -88,9 +88,22 @@ class App extends Component {
     onFilterSelect = (filter) => {
         this.setState({ filter: filter });
     }
+    onChangeSalary = (id, salary) => {
+            this.setState(({ data }) => ({
+                data: data.map(item => {
+                    if (item.id === id) {
+                        console.log(salary);
+                        return { ...item, salary: salary.replace(/\$/g, "")};
+                    }
+                    return (item);
+                })
+            }));
+        }
+    
     render() {
         const employees = this.state.data.length;
         const increase = this.state.data.filter(item => item.increase).length;
+        
         const { data, term, filter } = this.state;
         const visibleData = this.filterPost(this.searchEmp(data, term), filter);
         return (
@@ -108,7 +121,8 @@ class App extends Component {
                 <EmployeesList
                     data={visibleData}
                     onDelete={this.deleteItem}
-                    onToggleProp={this.onToggleProp}/>
+                    onToggleProp={this.onToggleProp}
+                    onChangeSalary={this.onChangeSalary} />
                 <EmployeesAddForm
                 onAdd={this.addItem}/>
         </div>
